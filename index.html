@@ -502,6 +502,20 @@
   function calcTotalReps(sets){
     return sets.reduce(function(sum,s){ return sum + (Number(s.reps)||0); }, 0);
   }
+  function calcMaxReps(sets){
+    return sets.reduce(function(m,s){ return Math.max(m, Number(s.reps)||0); }, 0);
+  }
+  // A session counts as bodyweight when no set had any added weight —
+  // volume/max-weight/e1RM are all meaningless (always 0) in that case,
+  // so reps become the metric that actually reflects progress.
+  function isBodyweightSession(sets){
+    return calcMaxWeight(sets) === 0;
+  }
+  function formatSetText(s){
+    var w = Number(s.weight)||0, r = Number(s.reps)||0;
+    if(w === 0) return r + '회';
+    return fmtNum(w) + '×' + r;
+  }
   function calcE1RM(sets){
     // Epley formula, based on the heaviest working set
     var best = 0;
@@ -634,30 +648,41 @@
     var all = sortLogsChrono(logsForExercise(log.exerciseId));
     var idx = all.findIndex(function(l){ return l.id === log.id; });
     var prior = idx === -1 ? all : all.slice(0, idx);
-    var bestVol = 0, bestMax = 0, bestE1rm = 0;
+    var bestVol = 0, bestMax = 0, bestE1rm = 0, bestReps = 0, bestMaxReps = 0;
     prior.forEach(function(l){
       bestVol = Math.max(bestVol, calcVolume(l.sets));
       bestMax = Math.max(bestMax, calcMaxWeight(l.sets));
       bestE1rm = Math.max(bestE1rm, calcE1RM(l.sets));
+      bestReps = Math.max(bestReps, calcTotalReps(l.sets));
+      bestMaxReps = Math.max(bestMaxReps, calcMaxReps(l.sets));
     });
-    return {bestVol:bestVol, bestMax:bestMax, bestE1rm:bestE1rm, count: prior.length};
+    return {bestVol:bestVol, bestMax:bestMax, bestE1rm:bestE1rm, bestReps:bestReps, bestMaxReps:bestMaxReps, count: prior.length};
   }
   function buildComparison(log){
     var prev = getPreviousLog(log);
     var prior = getPriorBest(log);
+    var bw = isBodyweightSession(log.sets);
     var vol = calcVolume(log.sets), mx = calcMaxWeight(log.sets), e1 = calcE1RM(log.sets);
+    var reps = calcTotalReps(log.sets), mxReps = calcMaxReps(log.sets);
     var cmp = {
       log: log,
+      isBodyweight: bw,
       hasPrev: !!prev,
       prev: prev,
       volume: vol, maxWeight: mx, e1rm: e1,
+      totalReps: reps, maxReps: mxReps,
       prevVolume: prev ? calcVolume(prev.sets) : null,
       prevMaxWeight: prev ? calcMaxWeight(prev.sets) : null,
       prevE1rm: prev ? calcE1RM(prev.sets) : null,
+      prevTotalReps: prev ? calcTotalReps(prev.sets) : null,
+      prevMaxReps: prev ? calcMaxReps(prev.sets) : null,
       priorBestVol: prior.bestVol, priorBestMax: prior.bestMax, priorBestE1rm: prior.bestE1rm,
+      priorBestReps: prior.bestReps, priorBestMaxReps: prior.bestMaxReps,
       sessionCountBefore: prior.count,
       isPRVolume: prior.count > 0 && vol > prior.bestVol,
       isPRMax: prior.count > 0 && mx > prior.bestMax,
+      isPRReps: prior.count > 0 && reps > prior.bestReps,
+      isPRMaxReps: prior.count > 0 && mxReps > prior.bestMaxReps,
       isFirstEver: prior.count === 0
     };
     return cmp;
@@ -821,12 +846,14 @@
   }
 
   function renderMiniLogRow(l, ex){
-    var vol = calcVolume(l.sets);
-    var setsText = l.sets.map(function(s){ return fmtNum(s.weight) + '×' + (s.reps||0); }).join(', ');
+    var bw = isBodyweightSession(l.sets);
+    var mainVal = bw ? calcTotalReps(l.sets) : calcVolume(l.sets);
+    var unit = bw ? '회' : 'kg';
+    var setsText = l.sets.map(formatSetText).join(', ');
     return '<div class="logitem">' +
       '<div class="logitem-head"><span class="logitem-name">' + escapeHtml(ex ? ex.name : '(삭제된 운동)') + '</span>' +
       '<span class="hist-date">' + formatDateLabel(l.date) + '</span></div>' +
-      '<div class="logitem-sets">' + escapeHtml(setsText) + ' &nbsp;·&nbsp; 총 ' + fmtNum(vol) + 'kg</div>' +
+      '<div class="logitem-sets">' + escapeHtml(setsText) + ' &nbsp;·&nbsp; 총 ' + fmtNum(mainVal) + unit + '</div>' +
     '</div>';
   }
 
@@ -840,12 +867,22 @@
       '<button class="iconbtn" data-action="dismiss-comparison" style="flex-shrink:0;">' + ICONS.close + '</button>' +
     '</div>';
 
-    if(cmp.isPRVolume || cmp.isPRMax){
+    var isPR = cmp.isBodyweight ? (cmp.isPRReps || cmp.isPRMaxReps) : (cmp.isPRVolume || cmp.isPRMax);
+    if(isPR){
       html += '<div style="margin-top:8px;"><span class="pr-flag">★ 신기록</span></div>';
     }
 
     if(cmp.isFirstEver){
       html += '<div class="muted small" style="margin-top:10px;">이 운동의 첫 기록이에요. 다음에 기록하면 여기서 변화를 비교해드릴게요.</div>';
+    } else if(cmp.isBodyweight){
+      var avgReps = cmp.log.sets.length ? Math.round(cmp.totalReps / cmp.log.sets.length) : 0;
+      var prevAvgReps = (cmp.prev && cmp.prev.sets.length) ? Math.round(cmp.prevTotalReps / cmp.prev.sets.length) : null;
+      html += '<div class="muted small" style="margin-top:8px;">지난 기록 (' + formatDateLabel(cmp.prev.date) + ') 대비 · 맨몸운동은 반복수로 비교해요</div>';
+      html += '<div class="compare-grid">';
+      html += compareMetric('총 반복수', cmp.totalReps, cmp.prevTotalReps, '회');
+      html += compareMetric('최고 세트', cmp.maxReps, cmp.prevMaxReps, '회');
+      html += compareMetric('세트당 평균', avgReps, prevAvgReps, '회');
+      html += '</div>';
     } else {
       html += '<div class="muted small" style="margin-top:8px;">지난 기록 (' + formatDateLabel(cmp.prev.date) + ') 대비</div>';
       html += '<div class="compare-grid">';
@@ -855,13 +892,23 @@
       html += '</div>';
     }
 
-    var gaugeBase = Math.max(cmp.priorBestVol, cmp.volume, 1);
-    var pct = Math.min(100, Math.round((cmp.volume / gaugeBase) * 100));
-    html += '<div class="prgauge">' +
-      '<div class="prgauge-head"><span>PR 게이지 (역대 최고 볼륨 대비)</span><span>' + pct + '%</span></div>' +
-      '<div class="prgauge-track"><div class="prgauge-fill' + (cmp.isPRVolume?' isnewpr':'') + '" style="width:' + pct + '%"></div></div>' +
-      '<div class="prgauge-ticks"><span>0kg</span><span>최고 ' + fmtNum(gaugeBase) + 'kg</span></div>' +
-    '</div>';
+    if(cmp.isBodyweight){
+      var gaugeBaseR = Math.max(cmp.priorBestReps, cmp.totalReps, 1);
+      var pctR = Math.min(100, Math.round((cmp.totalReps / gaugeBaseR) * 100));
+      html += '<div class="prgauge">' +
+        '<div class="prgauge-head"><span>PR 게이지 (역대 최고 반복수 대비)</span><span>' + pctR + '%</span></div>' +
+        '<div class="prgauge-track"><div class="prgauge-fill' + (cmp.isPRReps?' isnewpr':'') + '" style="width:' + pctR + '%"></div></div>' +
+        '<div class="prgauge-ticks"><span>0회</span><span>최고 ' + fmtNum(gaugeBaseR) + '회</span></div>' +
+      '</div>';
+    } else {
+      var gaugeBase = Math.max(cmp.priorBestVol, cmp.volume, 1);
+      var pct = Math.min(100, Math.round((cmp.volume / gaugeBase) * 100));
+      html += '<div class="prgauge">' +
+        '<div class="prgauge-head"><span>PR 게이지 (역대 최고 볼륨 대비)</span><span>' + pct + '%</span></div>' +
+        '<div class="prgauge-track"><div class="prgauge-fill' + (cmp.isPRVolume?' isnewpr':'') + '" style="width:' + pct + '%"></div></div>' +
+        '<div class="prgauge-ticks"><span>0kg</span><span>최고 ' + fmtNum(gaugeBase) + 'kg</span></div>' +
+      '</div>';
+    }
 
     html += '<div class="muted small" style="margin-top:12px;">탭하면 이 운동 히스토리로 이동해요</div>';
     html += '</div>';
@@ -912,12 +959,18 @@
     segHtml += '</div>';
 
     var allLogs = sortLogsChrono(logsForExercise(ui.historyExerciseId));
+    // Decide the exercise's overall display mode from its full history (not the
+    // period-filtered slice) so switching the period toggle doesn't flip the mode.
+    var bodyweightMode = allLogs.length > 0 &&
+      allLogs.filter(function(l){ return isBodyweightSession(l.sets); }).length > allLogs.length / 2;
     var logs = filterLogsByPeriod(allLogs, ui.historyPeriod);
-    var bestVol=0, bestMax=0, bestE1rm=0;
+    var bestVol=0, bestMax=0, bestE1rm=0, bestReps=0, bestMaxReps=0;
     logs.forEach(function(l){
       bestVol = Math.max(bestVol, calcVolume(l.sets));
       bestMax = Math.max(bestMax, calcMaxWeight(l.sets));
       bestE1rm = Math.max(bestE1rm, calcE1RM(l.sets));
+      bestReps = Math.max(bestReps, calcTotalReps(l.sets));
+      bestMaxReps = Math.max(bestMaxReps, calcMaxReps(l.sets));
     });
 
     html += '<div class="row between" style="margin:24px 0 10px; gap:10px;">' +
@@ -927,13 +980,20 @@
     html += '<div class="card">';
     if(!logs.length){
       html += '<div class="muted small">선택한 기간에는 기록이 없어요.</div>';
+    } else if(bodyweightMode){
+      html += '<div class="compare-grid">';
+      html += '<div class="compare-metric"><div class="mval">' + logs.length + '</div><div class="mlabel">총 세션</div></div>';
+      html += '<div class="compare-metric"><div class="mval">' + fmtNum(bestMaxReps) + '회</div><div class="mlabel">최고 세트 반복수</div></div>';
+      html += '<div class="compare-metric"><div class="mval">' + fmtNum(bestReps) + '회</div><div class="mlabel">최고 총 반복수</div></div>';
+      html += '</div>';
+      html += renderSparkline(logs, true);
     } else {
       html += '<div class="compare-grid">';
       html += '<div class="compare-metric"><div class="mval">' + logs.length + '</div><div class="mlabel">총 세션</div></div>';
       html += '<div class="compare-metric"><div class="mval">' + fmtWeight(bestMax) + '</div><div class="mlabel">최고 중량</div></div>';
       html += '<div class="compare-metric"><div class="mval">' + fmtWeight(bestE1rm) + '</div><div class="mlabel">최고 추정 1RM</div></div>';
       html += '</div>';
-      html += renderSparkline(logs);
+      html += renderSparkline(logs, false);
     }
     html += '</div>';
 
@@ -943,24 +1003,34 @@
       html += '<div class="muted small">선택한 기간에는 세션이 없어요. 기간을 늘려보세요.</div>';
     }
     logs.slice().reverse().forEach(function(l, i){
+      var rowBW = isBodyweightSession(l.sets);
       var prev = getPreviousLog(l);
-      var vol = calcVolume(l.sets);
-      var prevVol = prev ? calcVolume(prev.sets) : null;
-      var d = deltaPct(vol, prevVol);
+      var priorForThis = getPriorBest(l);
+      var mainVal, prevVal, unit, isPR, metricLabel;
+      if(rowBW){
+        mainVal = calcTotalReps(l.sets);
+        prevVal = prev ? calcTotalReps(prev.sets) : null;
+        unit = '회'; metricLabel = '총 반복수 ';
+        isPR = priorForThis.count>0 && (mainVal > priorForThis.bestReps || calcMaxReps(l.sets) > priorForThis.bestMaxReps);
+      } else {
+        mainVal = calcVolume(l.sets);
+        prevVal = prev ? calcVolume(prev.sets) : null;
+        unit = 'kg'; metricLabel = '총 볼륨 ';
+        isPR = priorForThis.count>0 && mainVal > priorForThis.bestVol;
+      }
+      var d = deltaPct(mainVal, prevVal);
       var cls='flat', arrow='–', text='첫 기록';
       if(d !== null){
         if(d>0.05){cls='up';arrow='▲';text='+'+fmtNum(d)+'%';}
         else if(d<-0.05){cls='down';arrow='▼';text=fmtNum(d)+'%';}
         else{text='0%';}
       }
-      var setsText = l.sets.map(function(s){ return fmtNum(s.weight)+'×'+(s.reps||0); }).join(', ');
-      var priorForThis = getPriorBest(l);
-      var isPR = priorForThis.count>0 && vol > priorForThis.bestVol;
+      var setsText = l.sets.map(formatSetText).join(', ');
       html += '<div class="hist-row">' +
         '<div class="row between"><span class="hist-date">' + formatDateLabel(l.date) + (isPR? ' &nbsp;<span class="pr-flag" style="padding:1px 6px;">PR</span>':'') + '</span>' +
         '<span class="delta ' + cls + '">' + arrow + ' ' + text + '</span></div>' +
         '<div class="hist-sets">' + escapeHtml(setsText) + '</div>' +
-        '<div class="hist-vol">총 볼륨 ' + fmtNum(vol) + 'kg' + (l.memo ? ' · ' + escapeHtml(l.memo) : '') + '</div>' +
+        '<div class="hist-vol">' + metricLabel + fmtNum(mainVal) + unit + (l.memo ? ' · ' + escapeHtml(l.memo) : '') + '</div>' +
         '<div class="logitem-actions">' +
           '<button class="btn ghost sm" data-action="edit-log" data-id="' + l.id + '">' + ICONS.edit + ' 수정</button>' +
           '<button class="btn danger sm" data-action="delete-log" data-id="' + l.id + '">' + ICONS.trash + ' 삭제</button>' +
@@ -986,9 +1056,9 @@
     return logs.filter(function(l){ return l.date >= cutoffStr; });
   }
 
-  function renderSparkline(logs){
+  function renderSparkline(logs, bodyweightMode){
     if(logs.length < 2) return '<div class="muted small" style="margin-top:12px;">세션이 2개 이상 쌓이면 추이 그래프가 표시돼요.</div>';
-    var vols = logs.map(function(l){ return calcVolume(l.sets); });
+    var vols = logs.map(function(l){ return bodyweightMode ? calcTotalReps(l.sets) : calcVolume(l.sets); });
     var max = Math.max.apply(null, vols), min = Math.min.apply(null, vols);
     var range = (max - min) || 1;
     var w = 300, h = 56, pad = 6;
@@ -1003,7 +1073,8 @@
       '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#5B8DBE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
       '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="3.2" fill="#E8622C"/>' +
     '</svg>';
-    return '<div style="margin-top:10px;"><div class="mlabel" style="margin-bottom:2px;">볼륨 추이 (세션별 총 볼륨)</div>' + svg + '</div>';
+    var label = bodyweightMode ? '반복수 추이 (세션별 총 반복수)' : '볼륨 추이 (세션별 총 볼륨)';
+    return '<div style="margin-top:10px;"><div class="mlabel" style="margin-bottom:2px;">' + label + '</div>' + svg + '</div>';
   }
 
   /* ============ Tab: 전체 기록 ============ */
@@ -1024,11 +1095,13 @@
       html += '<div class="logday-date">' + formatDateLabel(date) + '</div>';
       byDate[date].forEach(function(l){
         var ex = getExercise(l.exerciseId);
-        var vol = calcVolume(l.sets);
-        var setsText = l.sets.map(function(s){ return fmtNum(s.weight)+'×'+(s.reps||0); }).join(', ');
+        var rowBW = isBodyweightSession(l.sets);
+        var mainVal = rowBW ? calcTotalReps(l.sets) : calcVolume(l.sets);
+        var unit = rowBW ? '회' : 'kg';
+        var setsText = l.sets.map(formatSetText).join(', ');
         html += '<div class="logitem">' +
           '<div class="logitem-head"><span class="logitem-name">' + escapeHtml(ex?ex.name:'(삭제된 운동)') + '</span>' +
-          '<span class="hist-vol">' + fmtNum(vol) + 'kg</span></div>' +
+          '<span class="hist-vol">' + fmtNum(mainVal) + unit + '</span></div>' +
           '<div class="logitem-sets">' + escapeHtml(setsText) + '</div>' +
           (l.memo ? '<div class="hist-vol">' + escapeHtml(l.memo) + '</div>' : '') +
           '<div class="logitem-actions">' +
