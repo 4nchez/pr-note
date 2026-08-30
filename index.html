@@ -917,7 +917,11 @@
   function compareMetric(label, curr, prev, unit){
     var d = deltaPct(curr, prev);
     var cls = 'flat', arrow = '–', text = '변화없음';
-    if(d !== null){
+    if(prev === 0 && curr > 0){
+      // 지난 기록은 있지만 그 값이 0이었던 경우(맨몸 세션 뒤 처음 중량을 추가한 경우 등) —
+      // %로 표현할 수 없으니 "신규"로 표시.
+      cls='up'; arrow='▲'; text='신규';
+    } else if(d !== null){
       if(d > 0.05){ cls='up'; arrow='▲'; text = '+' + fmtNum(d) + '%'; }
       else if(d < -0.05){ cls='down'; arrow='▼'; text = fmtNum(d) + '%'; }
       else { text = '0%'; }
@@ -1006,28 +1010,40 @@
       var rowBW = isBodyweightSession(l.sets);
       var prev = getPreviousLog(l);
       var priorForThis = getPriorBest(l);
-      var mainVal, prevVal, unit, isPR, metricLabel;
+      var mainVal, prevVal, unit, isPR, isCurrentBest, metricLabel;
       if(rowBW){
         mainVal = calcTotalReps(l.sets);
         prevVal = prev ? calcTotalReps(prev.sets) : null;
         unit = '회'; metricLabel = '총 반복수 ';
         isPR = priorForThis.count>0 && (mainVal > priorForThis.bestReps || calcMaxReps(l.sets) > priorForThis.bestMaxReps);
+        // "지금 이 순간" 이 기간 안에서 최고 기록을 보유한 세션인지 — 요약 카드에 뜨는
+        // bestReps/bestMaxReps와 같은 기준(기간 필터 적용됨)으로 비교해 일치시킴.
+        isCurrentBest = (bestReps>0 && mainVal === bestReps) || (bestMaxReps>0 && calcMaxReps(l.sets) === bestMaxReps);
       } else {
         mainVal = calcVolume(l.sets);
         prevVal = prev ? calcVolume(prev.sets) : null;
         unit = 'kg'; metricLabel = '총 볼륨 ';
-        isPR = priorForThis.count>0 && mainVal > priorForThis.bestVol;
+        isPR = priorForThis.count>0 && (mainVal > priorForThis.bestVol || calcMaxWeight(l.sets) > priorForThis.bestMax);
+        isCurrentBest = (bestVol>0 && mainVal === bestVol) || (bestMax>0 && calcMaxWeight(l.sets) === bestMax);
       }
       var d = deltaPct(mainVal, prevVal);
       var cls='flat', arrow='–', text='첫 기록';
-      if(d !== null){
+      if(prevVal !== null && prevVal === 0 && mainVal > 0){
+        // 직전 기록이 있긴 한데 그 값이 0이라(예: 맨몸 세션 뒤에 처음 중량을 추가한 경우)
+        // %로는 비교가 안 되는 경우. "첫 기록"이라고 하면 이전 세션이 없었다는 뜻으로
+        // 오해될 수 있어서, 대신 "신규"로 표시해요.
+        cls='up'; arrow='▲'; text='신규';
+      } else if(d !== null){
         if(d>0.05){cls='up';arrow='▲';text='+'+fmtNum(d)+'%';}
         else if(d<-0.05){cls='down';arrow='▼';text=fmtNum(d)+'%';}
         else{text='0%';}
       }
       var setsText = l.sets.map(formatSetText).join(', ');
+      var badge = '';
+      if(isCurrentBest) badge = ' &nbsp;<span class="pr-flag" style="padding:1px 6px;">★ 최고 기록</span>';
+      else if(isPR) badge = ' &nbsp;<span class="pr-flag" style="padding:1px 6px;">PR</span>';
       html += '<div class="hist-row">' +
-        '<div class="row between"><span class="hist-date">' + formatDateLabel(l.date) + (isPR? ' &nbsp;<span class="pr-flag" style="padding:1px 6px;">PR</span>':'') + '</span>' +
+        '<div class="row between"><span class="hist-date">' + formatDateLabel(l.date) + badge + '</span>' +
         '<span class="delta ' + cls + '">' + arrow + ' ' + text + '</span></div>' +
         '<div class="hist-sets">' + escapeHtml(setsText) + '</div>' +
         '<div class="hist-vol">' + metricLabel + fmtNum(mainVal) + unit + (l.memo ? ' · ' + escapeHtml(l.memo) : '') + '</div>' +

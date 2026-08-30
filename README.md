@@ -39,8 +39,14 @@
 .
 ├── index.html          # 앱 전체 (마크업 + 스타일 + 로직, 단일 파일)
 ├── sample-data.json    # 테스트용 예시 기록 (선택 사항)
+├── CHANGELOG.md         # 버전별 변경사항
+├── LICENSE              # MIT 라이선스
 └── README.md
 ```
+
+## 변경사항
+
+버전별 변경 내역은 [CHANGELOG.md](./CHANGELOG.md)에서 확인할 수 있습니다.
 
 ## 라이선스
 
