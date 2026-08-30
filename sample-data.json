@@ -1,0 +1,1536 @@
+{
+  "exportedAt": "2026-08-30T08:09:29.531Z",
+  "exercises": [
+    {
+      "id": "ex_bench",
+      "name": "벤치프레스",
+      "category": "가슴"
+    },
+    {
+      "id": "ex_incline_bench",
+      "name": "인클라인 벤치프레스",
+      "category": "가슴"
+    },
+    {
+      "id": "ex_dumbbell_fly",
+      "name": "덤벨 플라이",
+      "category": "가슴"
+    },
+    {
+      "id": "ex_dips",
+      "name": "딥스",
+      "category": "가슴"
+    },
+    {
+      "id": "ex_deadlift",
+      "name": "데드리프트",
+      "category": "등"
+    },
+    {
+      "id": "ex_barbell_row",
+      "name": "바벨로우",
+      "category": "등"
+    },
+    {
+      "id": "ex_lat_pulldown",
+      "name": "랫풀다운",
+      "category": "등"
+    },
+    {
+      "id": "ex_squat",
+      "name": "스쿼트",
+      "category": "하체"
+    },
+    {
+      "id": "ex_leg_press",
+      "name": "레그프레스",
+      "category": "하체"
+    },
+    {
+      "id": "ex_lunge",
+      "name": "런지",
+      "category": "하체"
+    },
+    {
+      "id": "ex_leg_curl",
+      "name": "레그컬",
+      "category": "하체"
+    },
+    {
+      "id": "ex_leg_extension",
+      "name": "레그익스텐션",
+      "category": "하체"
+    },
+    {
+      "id": "ex_ohp",
+      "name": "오버헤드프레스",
+      "category": "어깨"
+    },
+    {
+      "id": "ex_lateral_raise",
+      "name": "사이드 레터럴 레이즈",
+      "category": "어깨"
+    },
+    {
+      "id": "ex_face_pull",
+      "name": "페이스풀",
+      "category": "어깨"
+    },
+    {
+      "id": "ex_barbell_curl",
+      "name": "바벨컬",
+      "category": "팔"
+    },
+    {
+      "id": "ex_dumbbell_curl",
+      "name": "덤벨컬",
+      "category": "팔"
+    },
+    {
+      "id": "ex_triceps_pushdown",
+      "name": "트라이셉스 푸시다운",
+      "category": "팔"
+    },
+    {
+      "id": "ex_leg_raise",
+      "name": "행잉 레그레이즈",
+      "category": "코어"
+    },
+    {
+      "id": "ex_plank",
+      "name": "플랭크",
+      "category": "코어"
+    },
+    {
+      "id": "ex_side_plank",
+      "name": "사이드 플랭크",
+      "category": "코어"
+    },
+    {
+      "id": "ex_situp",
+      "name": "브이업",
+      "category": "코어"
+    },
+    {
+      "id": "ex_pushup",
+      "name": "푸시업",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_diamond_pushup",
+      "name": "다이아몬드 푸시업",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_pike_pushup",
+      "name": "파이크 푸시업",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_pullup",
+      "name": "풀업",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_chinup",
+      "name": "친업(턱걸이)",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_inverted_row",
+      "name": "인버티드 로우",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_triceps_dip",
+      "name": "트라이셉스 딥스",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_bodyweight_squat",
+      "name": "맨몸 스쿼트",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_pistol_squat",
+      "name": "피스톨 스쿼트",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_jump_squat",
+      "name": "스쿼트 점프",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_glute_bridge",
+      "name": "글루트 브릿지",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_calf_raise",
+      "name": "맨몸 카프레이즈",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_mountain_climber",
+      "name": "마운틴클라이머",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_burpee",
+      "name": "버피",
+      "category": "맨몸"
+    },
+    {
+      "id": "ex_jumping_jack",
+      "name": "점핑잭",
+      "category": "맨몸"
+    }
+  ],
+  "logs": [
+    {
+      "id": "seed_log_0001",
+      "date": "2026-07-06",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 7
+        },
+        {
+          "weight": 40,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783364460000
+    },
+    {
+      "id": "seed_log_0002",
+      "date": "2026-07-06",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783364520000
+    },
+    {
+      "id": "seed_log_0003",
+      "date": "2026-07-06",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 12
+        },
+        {
+          "weight": 0,
+          "reps": 9
+        },
+        {
+          "weight": 0,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783364580000
+    },
+    {
+      "id": "seed_log_0004",
+      "date": "2026-07-08",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 60,
+          "reps": 5
+        },
+        {
+          "weight": 60,
+          "reps": 5
+        },
+        {
+          "weight": 60,
+          "reps": 4
+        }
+      ],
+      "memo": "허리 컨디션 체크하며 진행",
+      "createdAt": 1783537260000
+    },
+    {
+      "id": "seed_log_0005",
+      "date": "2026-07-08",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 35,
+          "reps": 8
+        },
+        {
+          "weight": 35,
+          "reps": 8
+        },
+        {
+          "weight": 35,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783537320000
+    },
+    {
+      "id": "seed_log_0006",
+      "date": "2026-07-08",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 3
+        },
+        {
+          "weight": 0,
+          "reps": 1
+        },
+        {
+          "weight": 0,
+          "reps": 1
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783537380000
+    },
+    {
+      "id": "seed_log_0007",
+      "date": "2026-07-10",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 50,
+          "reps": 8
+        },
+        {
+          "weight": 50,
+          "reps": 7
+        },
+        {
+          "weight": 50,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783710060000
+    },
+    {
+      "id": "seed_log_0008",
+      "date": "2026-07-10",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 80,
+          "reps": 10
+        },
+        {
+          "weight": 80,
+          "reps": 10
+        },
+        {
+          "weight": 80,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783710120000
+    },
+    {
+      "id": "seed_log_0009",
+      "date": "2026-07-13",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 7
+        },
+        {
+          "weight": 40,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783969260000
+    },
+    {
+      "id": "seed_log_0010",
+      "date": "2026-07-13",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783969320000
+    },
+    {
+      "id": "seed_log_0011",
+      "date": "2026-07-13",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 13
+        },
+        {
+          "weight": 0,
+          "reps": 10
+        },
+        {
+          "weight": 0,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1783969380000
+    },
+    {
+      "id": "seed_log_0012",
+      "date": "2026-07-15",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 60,
+          "reps": 5
+        },
+        {
+          "weight": 60,
+          "reps": 5
+        },
+        {
+          "weight": 60,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784142060000
+    },
+    {
+      "id": "seed_log_0013",
+      "date": "2026-07-15",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 35,
+          "reps": 8
+        },
+        {
+          "weight": 35,
+          "reps": 8
+        },
+        {
+          "weight": 35,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784142120000
+    },
+    {
+      "id": "seed_log_0014",
+      "date": "2026-07-15",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 3
+        },
+        {
+          "weight": 0,
+          "reps": 1
+        },
+        {
+          "weight": 0,
+          "reps": 1
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784142180000
+    },
+    {
+      "id": "seed_log_0015",
+      "date": "2026-07-17",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 50,
+          "reps": 8
+        },
+        {
+          "weight": 50,
+          "reps": 7
+        },
+        {
+          "weight": 50,
+          "reps": 6
+        }
+      ],
+      "memo": "무릎 상태 체크",
+      "createdAt": 1784314860000
+    },
+    {
+      "id": "seed_log_0016",
+      "date": "2026-07-17",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 80,
+          "reps": 10
+        },
+        {
+          "weight": 80,
+          "reps": 10
+        },
+        {
+          "weight": 80,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784314920000
+    },
+    {
+      "id": "seed_log_0017",
+      "date": "2026-07-20",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 7
+        },
+        {
+          "weight": 42.5,
+          "reps": 6
+        }
+      ],
+      "memo": "컨디션 좋음",
+      "createdAt": 1784574060000
+    },
+    {
+      "id": "seed_log_0018",
+      "date": "2026-07-20",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 8
+        },
+        {
+          "weight": 20,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784574120000
+    },
+    {
+      "id": "seed_log_0019",
+      "date": "2026-07-20",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 14
+        },
+        {
+          "weight": 0,
+          "reps": 11
+        },
+        {
+          "weight": 0,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784574180000
+    },
+    {
+      "id": "seed_log_0020",
+      "date": "2026-07-22",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 65,
+          "reps": 5
+        },
+        {
+          "weight": 65,
+          "reps": 5
+        },
+        {
+          "weight": 65,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784746860000
+    },
+    {
+      "id": "seed_log_0021",
+      "date": "2026-07-22",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 37.5,
+          "reps": 8
+        },
+        {
+          "weight": 37.5,
+          "reps": 8
+        },
+        {
+          "weight": 37.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784746920000
+    },
+    {
+      "id": "seed_log_0022",
+      "date": "2026-07-22",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 4
+        },
+        {
+          "weight": 0,
+          "reps": 2
+        },
+        {
+          "weight": 0,
+          "reps": 1
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784746980000
+    },
+    {
+      "id": "seed_log_0023",
+      "date": "2026-07-24",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 52.5,
+          "reps": 8
+        },
+        {
+          "weight": 52.5,
+          "reps": 7
+        },
+        {
+          "weight": 52.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784919660000
+    },
+    {
+      "id": "seed_log_0024",
+      "date": "2026-07-24",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 85,
+          "reps": 10
+        },
+        {
+          "weight": 85,
+          "reps": 10
+        },
+        {
+          "weight": 85,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1784919720000
+    },
+    {
+      "id": "seed_log_0025",
+      "date": "2026-07-27",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 7
+        },
+        {
+          "weight": 42.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785178860000
+    },
+    {
+      "id": "seed_log_0026",
+      "date": "2026-07-27",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785178920000
+    },
+    {
+      "id": "seed_log_0027",
+      "date": "2026-07-27",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 15
+        },
+        {
+          "weight": 0,
+          "reps": 12
+        },
+        {
+          "weight": 0,
+          "reps": 9
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785178980000
+    },
+    {
+      "id": "seed_log_0028",
+      "date": "2026-07-29",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 65,
+          "reps": 5
+        },
+        {
+          "weight": 65,
+          "reps": 5
+        },
+        {
+          "weight": 65,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785351660000
+    },
+    {
+      "id": "seed_log_0029",
+      "date": "2026-07-29",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 37.5,
+          "reps": 8
+        },
+        {
+          "weight": 37.5,
+          "reps": 8
+        },
+        {
+          "weight": 37.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785351720000
+    },
+    {
+      "id": "seed_log_0030",
+      "date": "2026-07-29",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 5
+        },
+        {
+          "weight": 0,
+          "reps": 3
+        },
+        {
+          "weight": 0,
+          "reps": 2
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785351780000
+    },
+    {
+      "id": "seed_log_0031",
+      "date": "2026-07-31",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 52.5,
+          "reps": 8
+        },
+        {
+          "weight": 52.5,
+          "reps": 7
+        },
+        {
+          "weight": 52.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785524460000
+    },
+    {
+      "id": "seed_log_0032",
+      "date": "2026-07-31",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 85,
+          "reps": 10
+        },
+        {
+          "weight": 85,
+          "reps": 10
+        },
+        {
+          "weight": 85,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785524520000
+    },
+    {
+      "id": "seed_log_0033",
+      "date": "2026-08-03",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 45,
+          "reps": 8
+        },
+        {
+          "weight": 45,
+          "reps": 7
+        },
+        {
+          "weight": 45,
+          "reps": 6
+        }
+      ],
+      "memo": "어깨 약간 뻐근",
+      "createdAt": 1785783660000
+    },
+    {
+      "id": "seed_log_0034",
+      "date": "2026-08-03",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785783720000
+    },
+    {
+      "id": "seed_log_0035",
+      "date": "2026-08-03",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 16
+        },
+        {
+          "weight": 0,
+          "reps": 13
+        },
+        {
+          "weight": 0,
+          "reps": 10
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785783780000
+    },
+    {
+      "id": "seed_log_0036",
+      "date": "2026-08-05",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 70,
+          "reps": 5
+        },
+        {
+          "weight": 70,
+          "reps": 5
+        },
+        {
+          "weight": 70,
+          "reps": 4
+        }
+      ],
+      "memo": "허리 컨디션 체크하며 진행",
+      "createdAt": 1785956460000
+    },
+    {
+      "id": "seed_log_0037",
+      "date": "2026-08-05",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785956520000
+    },
+    {
+      "id": "seed_log_0038",
+      "date": "2026-08-05",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 5
+        },
+        {
+          "weight": 0,
+          "reps": 3
+        },
+        {
+          "weight": 0,
+          "reps": 2
+        }
+      ],
+      "memo": "",
+      "createdAt": 1785956580000
+    },
+    {
+      "id": "seed_log_0039",
+      "date": "2026-08-07",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 55,
+          "reps": 8
+        },
+        {
+          "weight": 55,
+          "reps": 7
+        },
+        {
+          "weight": 55,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786129260000
+    },
+    {
+      "id": "seed_log_0040",
+      "date": "2026-08-07",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 90,
+          "reps": 10
+        },
+        {
+          "weight": 90,
+          "reps": 10
+        },
+        {
+          "weight": 90,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786129320000
+    },
+    {
+      "id": "seed_log_0041",
+      "date": "2026-08-10",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 45,
+          "reps": 8
+        },
+        {
+          "weight": 45,
+          "reps": 7
+        },
+        {
+          "weight": 45,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786388460000
+    },
+    {
+      "id": "seed_log_0042",
+      "date": "2026-08-10",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786388520000
+    },
+    {
+      "id": "seed_log_0043",
+      "date": "2026-08-10",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 17
+        },
+        {
+          "weight": 0,
+          "reps": 14
+        },
+        {
+          "weight": 0,
+          "reps": 11
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786388580000
+    },
+    {
+      "id": "seed_log_0044",
+      "date": "2026-08-12",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 70,
+          "reps": 5
+        },
+        {
+          "weight": 70,
+          "reps": 5
+        },
+        {
+          "weight": 70,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786561260000
+    },
+    {
+      "id": "seed_log_0045",
+      "date": "2026-08-12",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 8
+        },
+        {
+          "weight": 40,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786561320000
+    },
+    {
+      "id": "seed_log_0046",
+      "date": "2026-08-12",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 6
+        },
+        {
+          "weight": 0,
+          "reps": 4
+        },
+        {
+          "weight": 0,
+          "reps": 3
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786561380000
+    },
+    {
+      "id": "seed_log_0047",
+      "date": "2026-08-14",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 55,
+          "reps": 8
+        },
+        {
+          "weight": 55,
+          "reps": 7
+        },
+        {
+          "weight": 55,
+          "reps": 6
+        }
+      ],
+      "memo": "컨디션 최고",
+      "createdAt": 1786734060000
+    },
+    {
+      "id": "seed_log_0048",
+      "date": "2026-08-14",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 90,
+          "reps": 10
+        },
+        {
+          "weight": 90,
+          "reps": 10
+        },
+        {
+          "weight": 90,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786734120000
+    },
+    {
+      "id": "seed_log_0049",
+      "date": "2026-08-17",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 47.5,
+          "reps": 8
+        },
+        {
+          "weight": 47.5,
+          "reps": 7
+        },
+        {
+          "weight": 47.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786993260000
+    },
+    {
+      "id": "seed_log_0050",
+      "date": "2026-08-17",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786993320000
+    },
+    {
+      "id": "seed_log_0051",
+      "date": "2026-08-17",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 18
+        },
+        {
+          "weight": 0,
+          "reps": 15
+        },
+        {
+          "weight": 0,
+          "reps": 12
+        }
+      ],
+      "memo": "",
+      "createdAt": 1786993380000
+    },
+    {
+      "id": "seed_log_0052",
+      "date": "2026-08-19",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 75,
+          "reps": 5
+        },
+        {
+          "weight": 75,
+          "reps": 5
+        },
+        {
+          "weight": 75,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787166060000
+    },
+    {
+      "id": "seed_log_0053",
+      "date": "2026-08-19",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787166120000
+    },
+    {
+      "id": "seed_log_0054",
+      "date": "2026-08-19",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 7
+        },
+        {
+          "weight": 0,
+          "reps": 5
+        },
+        {
+          "weight": 0,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787166180000
+    },
+    {
+      "id": "seed_log_0055",
+      "date": "2026-08-21",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 57.5,
+          "reps": 8
+        },
+        {
+          "weight": 57.5,
+          "reps": 7
+        },
+        {
+          "weight": 57.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787338860000
+    },
+    {
+      "id": "seed_log_0056",
+      "date": "2026-08-21",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 95,
+          "reps": 10
+        },
+        {
+          "weight": 95,
+          "reps": 10
+        },
+        {
+          "weight": 95,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787338920000
+    },
+    {
+      "id": "seed_log_0057",
+      "date": "2026-08-24",
+      "exerciseId": "ex_bench",
+      "sets": [
+        {
+          "weight": 47.5,
+          "reps": 8
+        },
+        {
+          "weight": 47.5,
+          "reps": 7
+        },
+        {
+          "weight": 47.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787598060000
+    },
+    {
+      "id": "seed_log_0058",
+      "date": "2026-08-24",
+      "exerciseId": "ex_ohp",
+      "sets": [
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 8
+        },
+        {
+          "weight": 22.5,
+          "reps": 6
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787598120000
+    },
+    {
+      "id": "seed_log_0059",
+      "date": "2026-08-24",
+      "exerciseId": "ex_pushup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 19
+        },
+        {
+          "weight": 0,
+          "reps": 16
+        },
+        {
+          "weight": 0,
+          "reps": 13
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787598180000
+    },
+    {
+      "id": "seed_log_0060",
+      "date": "2026-08-26",
+      "exerciseId": "ex_deadlift",
+      "sets": [
+        {
+          "weight": 75,
+          "reps": 5
+        },
+        {
+          "weight": 75,
+          "reps": 5
+        },
+        {
+          "weight": 75,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787770860000
+    },
+    {
+      "id": "seed_log_0061",
+      "date": "2026-08-26",
+      "exerciseId": "ex_barbell_row",
+      "sets": [
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 8
+        },
+        {
+          "weight": 42.5,
+          "reps": 7
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787770920000
+    },
+    {
+      "id": "seed_log_0062",
+      "date": "2026-08-26",
+      "exerciseId": "ex_pullup",
+      "sets": [
+        {
+          "weight": 0,
+          "reps": 7
+        },
+        {
+          "weight": 0,
+          "reps": 5
+        },
+        {
+          "weight": 0,
+          "reps": 4
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787770980000
+    },
+    {
+      "id": "seed_log_0063",
+      "date": "2026-08-28",
+      "exerciseId": "ex_squat",
+      "sets": [
+        {
+          "weight": 57.5,
+          "reps": 8
+        },
+        {
+          "weight": 57.5,
+          "reps": 7
+        },
+        {
+          "weight": 57.5,
+          "reps": 6
+        }
+      ],
+      "memo": "무릎 상태 체크",
+      "createdAt": 1787943660000
+    },
+    {
+      "id": "seed_log_0064",
+      "date": "2026-08-28",
+      "exerciseId": "ex_leg_press",
+      "sets": [
+        {
+          "weight": 95,
+          "reps": 10
+        },
+        {
+          "weight": 95,
+          "reps": 10
+        },
+        {
+          "weight": 95,
+          "reps": 8
+        }
+      ],
+      "memo": "",
+      "createdAt": 1787943720000
+    }
+  ]
+}

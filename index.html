@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PR노트</title>
+<style>
+  :root{
+    --bg:#14161A;
+    --bg-elevated:#1A1D22;
+    --surface:#20242A;
+    --surface-2:#262B32;
+    --border:#2B3038;
+    --text:#F2F1ED;
+    --text-dim:#9AA0A8;
+    --text-faint:#5B6169;
+    --accent:#5B8DBE;
+    --accent-strong:#7BAAD6;
+    --ember:#E8622C;
+    --ember-dim:rgba(232,98,44,0.16);
+    --cool:#7C8591;
+    --cool-dim:rgba(124,133,145,0.16);
+    --radius:14px;
+    --radius-lg:18px;
+    --shadow-card:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -16px rgba(0,0,0,.6);
+    --shadow-float:0 10px 34px -8px rgba(0,0,0,.65), 0 2px 10px rgba(0,0,0,.4);
+    --ease:cubic-bezier(.22,.85,.28,1);
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",Roboto,sans-serif;
+    --font-display:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",Roboto,sans-serif;
+    --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  svg{ width:16px; height:16px; flex-shrink:0; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+    font-variant-numeric:tabular-nums;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+  button, input, select, textarea{ font-family:inherit; color:inherit; }
+  button{ cursor:pointer; }
+  ::selection{ background:var(--accent); color:#0c0d0f; }
+
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+    position:relative;
+    padding-bottom:78px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, var(--bg) 70%, rgba(20,22,26,0.85));
+    backdrop-filter:blur(6px);
+    padding:18px 18px 10px;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .brand-mark{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:-0.02em;
+  }
+  .brand-sub{
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:0.18em;
+    color:var(--text-faint);
+    text-transform:uppercase;
+  }
+  .topbar-meta{
+    margin-top:2px;
+    font-size:12.5px;
+    color:var(--text-dim);
+  }
+  .topbar-meta .weekstat{ color:var(--text-faint); }
+
+  /* ---------- Bottom nav ---------- */
+  .bottomnav{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    max-width:480px;
+    margin:0 auto;
+    display:flex;
+    background:var(--bg-elevated);
+    border-top:1px solid var(--border);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:30;
+  }
+  .navbtn{
+    flex:1;
+    min-height:48px;
+    background:none; border:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    padding:7px 2px;
+    border-radius:11px;
+    color:var(--text-faint);
+    font-size:10.5px;
+    letter-spacing:0.02em;
+    transition:color .15s ease, background .15s ease;
+  }
+  .navbtn svg{ width:20px; height:20px; transition:transform .15s var(--ease); }
+  .navbtn.active{ color:var(--accent-strong); background:rgba(91,141,190,0.13); }
+  .navbtn.active svg{ transform:translateY(-1px); }
+  .navbtn:active{ background:var(--surface); }
+  .navbtn:active svg{ transform:scale(0.88); }
+
+  /* ---------- Layout helpers ---------- */
+  .view{ padding:16px 16px 24px; animation:fadein .18s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+  .section-label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin:24px 0 10px;
+    display:flex; align-items:center; gap:7px;
+  }
+  .section-label::before{
+    content:''; width:3px; height:11px; border-radius:2px;
+    background:var(--accent); flex-shrink:0;
+  }
+  .section-label:first-child{ margin-top:0; }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow-card);
+  }
+  .stack{ display:flex; flex-direction:column; gap:10px; }
+  .row{ display:flex; align-items:center; gap:10px; }
+  .row.between{ justify-content:space-between; }
+  .empty{
+    text-align:center;
+    color:var(--text-dim);
+    padding:40px 16px;
+    font-size:13.5px;
+    line-height:1.6;
+  }
+  .empty b{ color:var(--text); }
+  .empty-icon{
+    display:block;
+    width:38px; height:38px; color:var(--text-faint);
+    opacity:.55; margin:0 auto 14px;
+  }
+  .empty-icon svg{ width:100%; height:100%; }
+
+  /* ---------- Form controls ---------- */
+  label.field{ display:block; margin-bottom:14px; }
+  label.field .flabel{
+    display:block; font-size:12px; color:var(--text-dim); margin-bottom:6px;
+  }
+  input[type=text], input[type=date], input[type=number], select, textarea{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px;
+    font-size:16px;
+    color:var(--text);
+    outline:none;
+    min-height:44px;
+  }
+  input:focus, select:focus, textarea:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,141,190,0.18); }
+  textarea{ resize:vertical; min-height:56px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:11px 16px;
+    min-height:44px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+    white-space:nowrap;
+    transition:transform .12s ease, box-shadow .15s ease, background .15s ease, opacity .15s ease;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#0c1116; font-weight:700; box-shadow:0 8px 20px -8px rgba(91,141,190,0.65); }
+  .btn.ghost{ background:transparent; }
+  .btn.danger{ color:#E8622C; border-color:rgba(232,98,44,0.35); background:transparent; }
+  .btn.block{ width:100%; }
+  .btn.sm{ padding:9px 13px; font-size:12.5px; min-height:44px; }
+  .iconbtn{
+    width:44px; height:44px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface-2); border:1px solid var(--border);
+    color:var(--text-dim);
+    flex-shrink:0;
+  }
+  .iconbtn svg{ width:18px; height:18px; }
+  .iconbtn.sm{ width:36px; height:36px; border-radius:9px; }
+  .iconbtn.sm svg{ width:15px; height:15px; }
+
+  /* ---------- Set rows ---------- */
+  .setrow{
+    display:grid;
+    grid-template-columns:24px 1fr 1fr 36px;
+    gap:8px;
+    align-items:center;
+    padding:5px 6px;
+    border-radius:9px;
+  }
+  .setrow:nth-child(odd){ background:rgba(255,255,255,0.025); }
+  .setnum{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-faint);
+    text-align:center;
+  }
+  .unit-suffix{ position:relative; }
+  .unit-suffix input{ padding-right:34px; }
+  .unit-suffix span{
+    position:absolute; right:11px; top:50%; transform:translateY(-50%);
+    font-size:11.5px; color:var(--text-faint);
+  }
+
+  /* ---------- Chips ---------- */
+  .chiprow{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    display:inline-flex; align-items:center;
+    min-height:44px;
+    padding:8px 15px;
+    border-radius:22px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-dim);
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .chip.active{ background:var(--accent); border-color:var(--accent); color:#0c1116; font-weight:700; box-shadow:0 6px 16px -8px rgba(91,141,190,0.7); }
+
+  /* ---------- Segmented control (period toggle etc. — distinct from chips) ---------- */
+  .segctrl{
+    display:inline-flex;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:3px;
+    gap:2px;
+    flex-shrink:0;
+  }
+  .segctrl button{
+    border:none;
+    background:transparent;
+    color:var(--text-dim);
+    font-size:11.5px;
+    font-weight:700;
+    padding:6px 9px;
+    min-height:34px;
+    border-radius:7px;
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease;
+  }
+  .segctrl button.active{ background:var(--accent); color:#0c1116; }
+
+  /* ---------- Delta badge ---------- */
+  .delta{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    font-weight:600;
+    padding:3px 8px;
+    border-radius:7px;
+  }
+  .delta.up{ color:var(--ember); background:var(--ember-dim); }
+  .delta.down{ color:var(--cool); background:var(--cool-dim); }
+  .delta.flat{ color:var(--text-faint); background:var(--surface-2); }
+
+  /* ---------- PR gauge (signature element) ---------- */
+  .prgauge{ margin-top:14px; }
+  .prgauge-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:11px; color:var(--text-faint); margin-bottom:6px;
+    font-family:var(--font-mono); letter-spacing:0.04em;
+  }
+  .prgauge-track{
+    height:10px; border-radius:6px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    overflow:hidden;
+    position:relative;
+  }
+  .prgauge-fill{
+    height:100%;
+    border-radius:6px 0 0 6px;
+    background:linear-gradient(90deg, var(--accent), var(--ember));
+    transition:width .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .prgauge-fill.isnewpr{ border-radius:6px; animation:glow 1.4s ease-in-out 2; }
+  @keyframes glow{
+    0%,100%{ filter:brightness(1); }
+    50%{ filter:brightness(1.35); }
+  }
+  .prgauge-ticks{
+    display:flex; justify-content:space-between;
+    font-family:var(--font-mono); font-size:9px; color:var(--text-faint);
+    margin-top:4px;
+  }
+  .pr-flag{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:var(--font-mono); font-weight:800; font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--ember);
+    background:var(--ember-dim);
+    border:1px solid rgba(232,98,44,0.4);
+    padding:3px 8px; border-radius:7px;
+  }
+
+  /* ---------- Comparison notification (floats over content) ---------- */
+  .notify-wrap{
+    position:fixed;
+    top:calc(env(safe-area-inset-top) + 10px);
+    left:50%;
+    transform:translateX(-50%);
+    width:calc(100% - 28px);
+    max-width:452px;
+    z-index:70;
+    pointer-events:none;
+  }
+  .notify-wrap > *{ pointer-events:auto; }
+  .compare-card{
+    border:1px solid rgba(91,141,190,0.4);
+    background:linear-gradient(180deg, rgba(91,141,190,0.10), transparent 55%), var(--bg-elevated);
+    border-radius:var(--radius-lg);
+    padding:16px 16px 15px;
+    box-shadow:var(--shadow-float);
+    animation:notifyIn .4s var(--ease);
+    cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .compare-card:active{ transform:scale(0.98); }
+  @keyframes notifyIn{
+    from{ transform:translateY(-22px) scale(.96); opacity:0; }
+    to{ transform:translateY(0) scale(1); opacity:1; }
+  }
+  .compare-title{
+    font-family:var(--font-display); font-weight:800; font-size:14.5px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .compare-title-left{ display:flex; align-items:center; gap:8px; min-width:0; }
+  .compare-title-left span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .compare-grid{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;
+    margin-top:14px;
+  }
+  .compare-metric{ text-align:center; }
+  .compare-metric .mval{
+    font-family:var(--font-mono); font-weight:700; font-size:16px;
+  }
+  .compare-metric .mlabel{
+    font-size:10.5px; color:var(--text-faint); margin-top:2px;
+  }
+
+  /* ---------- History rows ---------- */
+  .hist-row{
+    border-bottom:1px solid var(--border);
+    padding:12px 0;
+  }
+  .hist-row:last-child{ border-bottom:none; }
+  .hist-date{ font-size:12.5px; color:var(--text-dim); }
+  .hist-sets{ font-family:var(--font-mono); font-size:13.5px; margin-top:3px; }
+  .hist-vol{ font-size:12px; color:var(--text-faint); margin-top:3px; }
+
+  /* sparkline */
+  svg.spark{ display:block; width:100%; height:64px; }
+
+  /* log list (all logs tab) */
+  .logday{ margin-bottom:18px; }
+  .logday-date{
+    font-family:var(--font-mono); font-size:12px; color:var(--text-faint);
+    margin-bottom:8px; letter-spacing:0.03em;
+  }
+  .logitem{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:8px;
+  }
+  .logitem-head{ display:flex; justify-content:space-between; align-items:center; }
+  .logitem-name{ font-weight:700; font-size:14.5px; }
+  .logitem-sets{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); margin-top:5px; }
+  .logitem-actions{ display:flex; gap:6px; margin-top:8px; }
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,0.55);
+    display:flex; align-items:flex-end; justify-content:center;
+    z-index:50;
+    animation:backdropIn .2s ease;
+  }
+  @keyframes backdropIn{ from{opacity:0;} to{opacity:1;} }
+  .modal{
+    width:100%; max-width:480px;
+    background:var(--bg-elevated);
+    border-top-left-radius:22px; border-top-right-radius:22px;
+    border:1px solid var(--border); border-bottom:none;
+    padding:12px 18px calc(20px + env(safe-area-inset-bottom));
+    max-height:82vh; overflow-y:auto;
+    box-shadow:var(--shadow-float);
+    animation:modalUp .3s var(--ease);
+  }
+  @keyframes modalUp{
+    from{ transform:translateY(28px); opacity:0; }
+    to{ transform:translateY(0); opacity:1; }
+  }
+  .modal-handle{
+    width:36px; height:4px; border-radius:3px;
+    background:var(--border);
+    margin:2px auto 16px;
+  }
+  .modal-title{ font-family:var(--font-display); font-weight:800; font-size:16px; margin-bottom:14px; }
+
+  .toast{
+    position:fixed; left:50%; bottom:92px; transform:translateX(-50%);
+    background:var(--surface-2); border:1px solid var(--border);
+    padding:10px 16px; border-radius:10px; font-size:13px;
+    z-index:60; max-width:90%; text-align:center;
+    box-shadow:var(--shadow-float);
+    animation:toastIn .25s var(--ease) forwards;
+  }
+  @keyframes toastIn{
+    from{ transform:translateX(-50%) translateY(8px); opacity:0; }
+    to{ transform:translateX(-50%) translateY(0); opacity:1; }
+  }
+
+  a.linklike{ color:var(--accent-strong); text-decoration:underline; }
+  .muted{ color:var(--text-dim); }
+  .small{ font-size:12px; }
+  .warn-box{
+    background:var(--ember-dim); border:1px solid rgba(232,98,44,0.3);
+    border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--text);
+    line-height:1.55;
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ Utilities ============ */
+  function uid(prefix){
+    return (prefix||'id') + '_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+  }
+  function todayStr(){
+    var d = new Date();
+    var y = d.getFullYear();
+    var m = String(d.getMonth()+1).padStart(2,'0');
+    var day = String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+  function formatDateLabel(iso){
+    if(!iso) return '';
+    var parts = iso.split('-');
+    var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    var days = ['일','월','화','수','목','금','토'];
+    return parseInt(parts[1]) + '월 ' + parseInt(parts[2]) + '일 (' + days[d.getDay()] + ')';
+  }
+  function round1(n){ return Math.round(n*10)/10; }
+  function fmtNum(n){
+    if(n === null || n === undefined || isNaN(n)) return '-';
+    var r = round1(n);
+    return r.toLocaleString('ko-KR', {maximumFractionDigits:1});
+  }
+  function fmtWeight(n){ return fmtNum(n) + 'kg'; }
+  function escapeHtml(s){
+    if(s === null || s === undefined) return '';
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function calcVolume(sets){
+    return sets.reduce(function(sum,s){ return sum + (Number(s.weight)||0)*(Number(s.reps)||0); }, 0);
+  }
+  function calcMaxWeight(sets){
+    return sets.reduce(function(m,s){ return Math.max(m, Number(s.weight)||0); }, 0);
+  }
+  function calcTotalReps(sets){
+    return sets.reduce(function(sum,s){ return sum + (Number(s.reps)||0); }, 0);
+  }
+  function calcE1RM(sets){
+    // Epley formula, based on the heaviest working set
+    var best = 0;
+    sets.forEach(function(s){
+      var w = Number(s.weight)||0, r = Number(s.reps)||0;
+      if(r <= 0) return;
+      var e = w * (1 + r/30);
+      if(e > best) best = e;
+    });
+    return best;
+  }
+
+  /* ============ Default exercise seed ============ */
+  var DEFAULT_EXERCISES = [
+    {id:'ex_bench', name:'벤치프레스', category:'가슴'},
+    {id:'ex_incline_bench', name:'인클라인 벤치프레스', category:'가슴'},
+    {id:'ex_dumbbell_fly', name:'덤벨 플라이', category:'가슴'},
+    {id:'ex_dips', name:'딥스', category:'가슴'},
+    {id:'ex_deadlift', name:'데드리프트', category:'등'},
+    {id:'ex_barbell_row', name:'바벨로우', category:'등'},
+    {id:'ex_lat_pulldown', name:'랫풀다운', category:'등'},
+    {id:'ex_squat', name:'스쿼트', category:'하체'},
+    {id:'ex_leg_press', name:'레그프레스', category:'하체'},
+    {id:'ex_lunge', name:'런지', category:'하체'},
+    {id:'ex_leg_curl', name:'레그컬', category:'하체'},
+    {id:'ex_leg_extension', name:'레그익스텐션', category:'하체'},
+    {id:'ex_ohp', name:'오버헤드프레스', category:'어깨'},
+    {id:'ex_lateral_raise', name:'사이드 레터럴 레이즈', category:'어깨'},
+    {id:'ex_face_pull', name:'페이스풀', category:'어깨'},
+    {id:'ex_barbell_curl', name:'바벨컬', category:'팔'},
+    {id:'ex_dumbbell_curl', name:'덤벨컬', category:'팔'},
+    {id:'ex_triceps_pushdown', name:'트라이셉스 푸시다운', category:'팔'},
+    {id:'ex_leg_raise', name:'행잉 레그레이즈', category:'코어'},
+    {id:'ex_plank', name:'플랭크', category:'코어'},
+    {id:'ex_side_plank', name:'사이드 플랭크', category:'코어'},
+    {id:'ex_situp', name:'브이업', category:'코어'},
+    {id:'ex_pushup', name:'푸시업', category:'맨몸'},
+    {id:'ex_diamond_pushup', name:'다이아몬드 푸시업', category:'맨몸'},
+    {id:'ex_pike_pushup', name:'파이크 푸시업', category:'맨몸'},
+    {id:'ex_pullup', name:'풀업', category:'맨몸'},
+    {id:'ex_chinup', name:'친업(턱걸이)', category:'맨몸'},
+    {id:'ex_inverted_row', name:'인버티드 로우', category:'맨몸'},
+    {id:'ex_triceps_dip', name:'트라이셉스 딥스', category:'맨몸'},
+    {id:'ex_bodyweight_squat', name:'맨몸 스쿼트', category:'맨몸'},
+    {id:'ex_pistol_squat', name:'피스톨 스쿼트', category:'맨몸'},
+    {id:'ex_jump_squat', name:'스쿼트 점프', category:'맨몸'},
+    {id:'ex_glute_bridge', name:'글루트 브릿지', category:'맨몸'},
+    {id:'ex_calf_raise', name:'맨몸 카프레이즈', category:'맨몸'},
+    {id:'ex_mountain_climber', name:'마운틴클라이머', category:'맨몸'},
+    {id:'ex_burpee', name:'버피', category:'맨몸'},
+    {id:'ex_jumping_jack', name:'점핑잭', category:'맨몸'}
+  ];
+  var CATEGORIES = ['가슴','등','하체','어깨','팔','코어','맨몸','기타'];
+
+  /* ============ State / persistence ============ */
+  var STORAGE_KEY = 'strengthJournalData_v1';
+  var state = null;
+
+  function loadState(){
+    var raw = null;
+    try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ raw = null; }
+    if(raw){
+      try{
+        var parsed = JSON.parse(raw);
+        if(parsed && Array.isArray(parsed.exercises) && Array.isArray(parsed.logs)){
+          // Merge in any newly-added built-in exercises (e.g. a new "맨몸" category)
+          // without touching exercises the user already has or has customized.
+          var existingIds = {};
+          parsed.exercises.forEach(function(e){ existingIds[e.id] = true; });
+          DEFAULT_EXERCISES.forEach(function(e){
+            if(!existingIds[e.id]) parsed.exercises.push({id:e.id, name:e.name, category:e.category});
+          });
+          return parsed;
+        }
+      }catch(e){}
+    }
+    return { exercises: DEFAULT_EXERCISES.slice(), logs: [] };
+  }
+  function persist(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({exercises: state.exercises, logs: state.logs}));
+    }catch(e){
+      showToast('저장 실패: 브라우저 저장공간을 확인해주세요');
+    }
+  }
+
+  var ui = {
+    tab: 'log',
+    logForm: { date: todayStr(), exerciseId: null, sets: [{weight:'', reps:''}], memo:'', editingLogId: null },
+    lastComparison: null,
+    historyExerciseId: null,
+    historyPeriod: 'all',
+    showAddExercise: false,
+    newExName: '', newExCategory: '가슴',
+    editingExerciseId: null,
+    addExerciseReturnTo: null,
+    showExerciseManager: false,
+    confirmClearStep: 0,
+    toast: null,
+    toastTimer: null,
+    compareTimer: null
+  };
+
+  state = loadState();
+  if(!state.exercises.length){ state.exercises = DEFAULT_EXERCISES.slice(); }
+
+  /* ============ Derived helpers ============ */
+  function getExercise(id){
+    return state.exercises.find(function(e){ return e.id === id; }) || null;
+  }
+  function logsForExercise(exId){
+    return state.logs.filter(function(l){ return l.exerciseId === exId; });
+  }
+  function sortLogsChrono(logs){
+    // ascending by date then createdAt
+    return logs.slice().sort(function(a,b){
+      if(a.date !== b.date) return a.date < b.date ? -1 : 1;
+      return (a.createdAt||0) - (b.createdAt||0);
+    });
+  }
+  // Returns the log that immediately precedes `log` chronologically for the same exercise
+  function getPreviousLog(log){
+    var all = sortLogsChrono(logsForExercise(log.exerciseId));
+    var idx = all.findIndex(function(l){ return l.id === log.id; });
+    if(idx <= 0) return null;
+    return all[idx-1];
+  }
+  // Best-ever stats among logs strictly before `log` (chronologically), used for PR detection
+  function getPriorBest(log){
+    var all = sortLogsChrono(logsForExercise(log.exerciseId));
+    var idx = all.findIndex(function(l){ return l.id === log.id; });
+    var prior = idx === -1 ? all : all.slice(0, idx);
+    var bestVol = 0, bestMax = 0, bestE1rm = 0;
+    prior.forEach(function(l){
+      bestVol = Math.max(bestVol, calcVolume(l.sets));
+      bestMax = Math.max(bestMax, calcMaxWeight(l.sets));
+      bestE1rm = Math.max(bestE1rm, calcE1RM(l.sets));
+    });
+    return {bestVol:bestVol, bestMax:bestMax, bestE1rm:bestE1rm, count: prior.length};
+  }
+  function buildComparison(log){
+    var prev = getPreviousLog(log);
+    var prior = getPriorBest(log);
+    var vol = calcVolume(log.sets), mx = calcMaxWeight(log.sets), e1 = calcE1RM(log.sets);
+    var cmp = {
+      log: log,
+      hasPrev: !!prev,
+      prev: prev,
+      volume: vol, maxWeight: mx, e1rm: e1,
+      prevVolume: prev ? calcVolume(prev.sets) : null,
+      prevMaxWeight: prev ? calcMaxWeight(prev.sets) : null,
+      prevE1rm: prev ? calcE1RM(prev.sets) : null,
+      priorBestVol: prior.bestVol, priorBestMax: prior.bestMax, priorBestE1rm: prior.bestE1rm,
+      sessionCountBefore: prior.count,
+      isPRVolume: prior.count > 0 && vol > prior.bestVol,
+      isPRMax: prior.count > 0 && mx > prior.bestMax,
+      isFirstEver: prior.count === 0
+    };
+    return cmp;
+  }
+  function deltaPct(curr, prev){
+    if(prev === null || prev === undefined || prev === 0) return null;
+    return ((curr - prev) / prev) * 100;
+  }
+
+  /* ============ Toast ============ */
+  function showToast(msg){
+    ui.toast = msg;
+    render();
+    clearTimeout(ui.toastTimer);
+    ui.toastTimer = setTimeout(function(){ ui.toast = null; render(); }, 2200);
+  }
+
+  /* ============ Icons (inline SVG, stroke=currentColor) ============ */
+  var ICONS = {
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    dumbbell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="4" height="12" rx="1.3"/><rect x="19" y="6" width="4" height="12" rx="1.3"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>',
+    list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+    gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.3 12.3 2.4 2.4 4.6-5"/></svg>'
+  };
+
+  /* ============ Render root ============ */
+  var app = document.getElementById('app');
+
+  function render(){
+    var html = '';
+    html += renderTopbar();
+    html += '<div class="view">';
+    if(ui.tab === 'log') html += renderLogTab();
+    else if(ui.tab === 'history') html += renderHistoryTab();
+    else if(ui.tab === 'all') html += renderAllLogsTab();
+    else if(ui.tab === 'settings') html += renderSettingsTab();
+    html += '</div>';
+    html += renderBottomNav();
+    if(ui.showAddExercise) html += renderAddExerciseModal();
+    if(ui.showExerciseManager) html += renderExerciseManagerModal();
+    if(ui.toast) html += '<div class="toast">' + escapeHtml(ui.toast) + '</div>';
+    // Comparison result floats as a notification, independent of the active tab,
+    // so saving a log always surfaces the "better than before" feedback immediately.
+    if(ui.lastComparison) html += '<div class="notify-wrap">' + renderComparisonCard(ui.lastComparison) + '</div>';
+    app.innerHTML = html;
+    bindDynamic();
+  }
+
+  function weeklyCount(){
+    var d = new Date();
+    d.setHours(0,0,0,0);
+    d.setDate(d.getDate() - 6);
+    var cutoff = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    var today = todayStr();
+    var seen = {};
+    state.logs.forEach(function(l){ if(l.date >= cutoff && l.date <= today) seen[l.date] = true; });
+    return Object.keys(seen).length;
+  }
+
+  function renderTopbar(){
+    var titles = {log:'오늘의 기록', history:'운동별 추이', all:'전체 기록', settings:'설정'};
+    var meta = titles[ui.tab];
+    if(ui.tab === 'log'){
+      var wc = weeklyCount();
+      if(wc > 0) meta += ' <span class="weekstat">· 최근 7일 ' + wc + '일 운동</span>';
+    }
+    return '' +
+      '<div class="topbar">' +
+        '<div class="brand">' +
+          '<span class="brand-mark">PR노트</span>' +
+          '<span class="brand-sub">PR NOTE</span>' +
+        '</div>' +
+        '<div class="topbar-meta">' + meta + '</div>' +
+      '</div>';
+  }
+
+  function renderBottomNav(){
+    function item(tab, label, icon){
+      var active = ui.tab === tab ? ' active' : '';
+      return '<button class="navbtn' + active + '" data-action="nav" data-tab="' + tab + '">' + icon + '<span>' + label + '</span></button>';
+    }
+    return '<div class="bottomnav">' +
+      item('log','기록', ICONS.dumbbell) +
+      item('history','히스토리', ICONS.chart) +
+      item('all','전체기록', ICONS.list) +
+      item('settings','설정', ICONS.gear) +
+      '</div>';
+  }
+
+  /* ============ Tab: 기록 입력 ============ */
+  function renderLogTab(){
+    var html = '';
+
+    html += '<div class="section-label">' + (ui.logForm.editingLogId ? '기록 수정' : '새 기록 추가') + '</div>';
+    html += '<div class="card stack">';
+
+    html += '<label class="field"><span class="flabel">날짜</span>' +
+      '<input type="date" value="' + escapeHtml(ui.logForm.date) + '" data-field="log-date"></label>';
+
+    html += '<label class="field"><span class="flabel">운동 종목</span>';
+    html += '<select data-field="log-exercise">';
+    html += '<option value="">운동을 선택하세요</option>';
+    CATEGORIES.forEach(function(cat){
+      var exs = state.exercises.filter(function(e){ return e.category === cat; });
+      if(!exs.length) return;
+      html += '<optgroup label="' + escapeHtml(cat) + '">';
+      exs.forEach(function(e){
+        var sel = e.id === ui.logForm.exerciseId ? ' selected' : '';
+        html += '<option value="' + e.id + '"' + sel + '>' + escapeHtml(e.name) + '</option>';
+      });
+      html += '</optgroup>';
+    });
+    html += '</select></label>';
+    html += '<button class="btn ghost sm" data-action="open-add-exercise" style="align-self:flex-start;">' + ICONS.plus + ' 새 운동 종목 추가</button>';
+
+    // sets
+    html += '<div class="flabel" style="margin-top:6px;">세트 기록</div>';
+    html += '<div class="stack" id="setrows">';
+    ui.logForm.sets.forEach(function(s, idx){
+      html += '<div class="setrow">' +
+        '<div class="setnum">' + (idx+1) + '</div>' +
+        '<div class="unit-suffix"><input type="number" inputmode="decimal" step="0.5" min="0" placeholder="무게" value="' + escapeHtml(s.weight) + '" data-field="set-weight" data-idx="' + idx + '"><span>kg</span></div>' +
+        '<div class="unit-suffix"><input type="number" inputmode="numeric" step="1" min="0" placeholder="횟수" value="' + escapeHtml(s.reps) + '" data-field="set-reps" data-idx="' + idx + '"><span>회</span></div>' +
+        '<button class="iconbtn sm" data-action="remove-set" data-idx="' + idx + '" ' + (ui.logForm.sets.length<=1?'disabled style="opacity:.35"':'') + '>' + ICONS.x + '</button>' +
+      '</div>';
+    });
+    html += '</div>';
+    html += '<button class="btn ghost sm" data-action="add-set" style="align-self:flex-start;">' + ICONS.plus + ' 세트 추가</button>';
+
+    html += '<label class="field" style="margin-top:6px;"><span class="flabel">메모 (선택)</span>' +
+      '<textarea placeholder="컨디션, 폼 체크 등" data-field="log-memo">' + escapeHtml(ui.logForm.memo) + '</textarea></label>';
+
+    html += '<div class="row" style="margin-top:4px;">';
+    if(ui.logForm.editingLogId){
+      html += '<button class="btn ghost" data-action="cancel-edit" style="flex:1;">취소</button>';
+    }
+    html += '<button class="btn primary block" data-action="save-log">' + (ui.logForm.editingLogId ? '수정 저장' : '기록 저장') + '</button>';
+    html += '</div>';
+
+    html += '</div>'; // card
+
+    // quick recent list
+    var recent = sortLogsChrono(state.logs).reverse().slice(0,4);
+    if(recent.length){
+      html += '<div class="section-label">최근 기록</div>';
+      html += '<div class="stack">';
+      recent.forEach(function(l){
+        var ex = getExercise(l.exerciseId);
+        html += renderMiniLogRow(l, ex);
+      });
+      html += '</div>';
+    }
+
+    return html;
+  }
+
+  function renderMiniLogRow(l, ex){
+    var vol = calcVolume(l.sets);
+    var setsText = l.sets.map(function(s){ return fmtNum(s.weight) + '×' + (s.reps||0); }).join(', ');
+    return '<div class="logitem">' +
+      '<div class="logitem-head"><span class="logitem-name">' + escapeHtml(ex ? ex.name : '(삭제된 운동)') + '</span>' +
+      '<span class="hist-date">' + formatDateLabel(l.date) + '</span></div>' +
+      '<div class="logitem-sets">' + escapeHtml(setsText) + ' &nbsp;·&nbsp; 총 ' + fmtNum(vol) + 'kg</div>' +
+    '</div>';
+  }
+
+  function renderComparisonCard(cmp){
+    var exId = cmp.log.exerciseId;
+    var exName = escapeHtml((getExercise(exId)||{}).name || '');
+    var html = '<div class="compare-card" data-action="open-history-from-notify" data-id="' + exId + '">';
+
+    html += '<div class="compare-title">' +
+      '<div class="compare-title-left">' + ICONS.check + '<span>' + exName + ' 저장 완료</span></div>' +
+      '<button class="iconbtn" data-action="dismiss-comparison" style="flex-shrink:0;">' + ICONS.close + '</button>' +
+    '</div>';
+
+    if(cmp.isPRVolume || cmp.isPRMax){
+      html += '<div style="margin-top:8px;"><span class="pr-flag">★ 신기록</span></div>';
+    }
+
+    if(cmp.isFirstEver){
+      html += '<div class="muted small" style="margin-top:10px;">이 운동의 첫 기록이에요. 다음에 기록하면 여기서 변화를 비교해드릴게요.</div>';
+    } else {
+      html += '<div class="muted small" style="margin-top:8px;">지난 기록 (' + formatDateLabel(cmp.prev.date) + ') 대비</div>';
+      html += '<div class="compare-grid">';
+      html += compareMetric('총 볼륨', cmp.volume, cmp.prevVolume, 'kg');
+      html += compareMetric('최고 중량', cmp.maxWeight, cmp.prevMaxWeight, 'kg');
+      html += compareMetric('추정 1RM', cmp.e1rm, cmp.prevE1rm, 'kg');
+      html += '</div>';
+    }
+
+    var gaugeBase = Math.max(cmp.priorBestVol, cmp.volume, 1);
+    var pct = Math.min(100, Math.round((cmp.volume / gaugeBase) * 100));
+    html += '<div class="prgauge">' +
+      '<div class="prgauge-head"><span>PR 게이지 (역대 최고 볼륨 대비)</span><span>' + pct + '%</span></div>' +
+      '<div class="prgauge-track"><div class="prgauge-fill' + (cmp.isPRVolume?' isnewpr':'') + '" style="width:' + pct + '%"></div></div>' +
+      '<div class="prgauge-ticks"><span>0kg</span><span>최고 ' + fmtNum(gaugeBase) + 'kg</span></div>' +
+    '</div>';
+
+    html += '<div class="muted small" style="margin-top:12px;">탭하면 이 운동 히스토리로 이동해요</div>';
+    html += '</div>';
+    return html;
+  }
+  function compareMetric(label, curr, prev, unit){
+    var d = deltaPct(curr, prev);
+    var cls = 'flat', arrow = '–', text = '변화없음';
+    if(d !== null){
+      if(d > 0.05){ cls='up'; arrow='▲'; text = '+' + fmtNum(d) + '%'; }
+      else if(d < -0.05){ cls='down'; arrow='▼'; text = fmtNum(d) + '%'; }
+      else { text = '0%'; }
+    }
+    return '<div class="compare-metric">' +
+      '<div class="mval">' + fmtNum(curr) + unit + '</div>' +
+      '<div class="delta ' + cls + '" style="margin-top:4px;">' + arrow + ' ' + text + '</div>' +
+      '<div class="mlabel">' + label + '</div>' +
+    '</div>';
+  }
+
+  /* ============ Tab: 히스토리 (운동별) ============ */
+  function renderHistoryTab(){
+    var html = '';
+    var exercisesWithLogs = state.exercises.filter(function(e){ return logsForExercise(e.id).length > 0; });
+
+    if(!exercisesWithLogs.length){
+      html += '<div class="empty"><div class="empty-icon">' + ICONS.chart + '</div>아직 기록이 없어요.<br><b>기록</b> 탭에서 첫 운동을 기록해보세요!</div>';
+      return html;
+    }
+
+    if(!ui.historyExerciseId || !logsForExercise(ui.historyExerciseId).length){
+      ui.historyExerciseId = exercisesWithLogs[0].id;
+    }
+
+    html += '<div class="chiprow">';
+    exercisesWithLogs.forEach(function(e){
+      var active = e.id === ui.historyExerciseId ? ' active' : '';
+      html += '<button class="chip' + active + '" data-action="pick-history-exercise" data-id="' + e.id + '">' + escapeHtml(e.name) + '</button>';
+    });
+    html += '</div>';
+
+    var periods = [['4w','4주'],['3m','3개월'],['6m','6개월'],['all','전체']];
+    var segHtml = '<div class="segctrl">';
+    periods.forEach(function(p){
+      var cls = ui.historyPeriod === p[0] ? ' class="active"' : '';
+      segHtml += '<button' + cls + ' data-action="pick-history-period" data-period="' + p[0] + '">' + p[1] + '</button>';
+    });
+    segHtml += '</div>';
+
+    var allLogs = sortLogsChrono(logsForExercise(ui.historyExerciseId));
+    var logs = filterLogsByPeriod(allLogs, ui.historyPeriod);
+    var bestVol=0, bestMax=0, bestE1rm=0;
+    logs.forEach(function(l){
+      bestVol = Math.max(bestVol, calcVolume(l.sets));
+      bestMax = Math.max(bestMax, calcMaxWeight(l.sets));
+      bestE1rm = Math.max(bestE1rm, calcE1RM(l.sets));
+    });
+
+    html += '<div class="row between" style="margin:24px 0 10px; gap:10px;">' +
+      '<div class="section-label" style="margin:0;">요약</div>' +
+      segHtml +
+    '</div>';
+    html += '<div class="card">';
+    if(!logs.length){
+      html += '<div class="muted small">선택한 기간에는 기록이 없어요.</div>';
+    } else {
+      html += '<div class="compare-grid">';
+      html += '<div class="compare-metric"><div class="mval">' + logs.length + '</div><div class="mlabel">총 세션</div></div>';
+      html += '<div class="compare-metric"><div class="mval">' + fmtWeight(bestMax) + '</div><div class="mlabel">최고 중량</div></div>';
+      html += '<div class="compare-metric"><div class="mval">' + fmtWeight(bestE1rm) + '</div><div class="mlabel">최고 추정 1RM</div></div>';
+      html += '</div>';
+      html += renderSparkline(logs);
+    }
+    html += '</div>';
+
+    html += '<div class="section-label">세션 기록 (최신순)</div>';
+    html += '<div class="card">';
+    if(!logs.length){
+      html += '<div class="muted small">선택한 기간에는 세션이 없어요. 기간을 늘려보세요.</div>';
+    }
+    logs.slice().reverse().forEach(function(l, i){
+      var prev = getPreviousLog(l);
+      var vol = calcVolume(l.sets);
+      var prevVol = prev ? calcVolume(prev.sets) : null;
+      var d = deltaPct(vol, prevVol);
+      var cls='flat', arrow='–', text='첫 기록';
+      if(d !== null){
+        if(d>0.05){cls='up';arrow='▲';text='+'+fmtNum(d)+'%';}
+        else if(d<-0.05){cls='down';arrow='▼';text=fmtNum(d)+'%';}
+        else{text='0%';}
+      }
+      var setsText = l.sets.map(function(s){ return fmtNum(s.weight)+'×'+(s.reps||0); }).join(', ');
+      var priorForThis = getPriorBest(l);
+      var isPR = priorForThis.count>0 && vol > priorForThis.bestVol;
+      html += '<div class="hist-row">' +
+        '<div class="row between"><span class="hist-date">' + formatDateLabel(l.date) + (isPR? ' &nbsp;<span class="pr-flag" style="padding:1px 6px;">PR</span>':'') + '</span>' +
+        '<span class="delta ' + cls + '">' + arrow + ' ' + text + '</span></div>' +
+        '<div class="hist-sets">' + escapeHtml(setsText) + '</div>' +
+        '<div class="hist-vol">총 볼륨 ' + fmtNum(vol) + 'kg' + (l.memo ? ' · ' + escapeHtml(l.memo) : '') + '</div>' +
+        '<div class="logitem-actions">' +
+          '<button class="btn ghost sm" data-action="edit-log" data-id="' + l.id + '">' + ICONS.edit + ' 수정</button>' +
+          '<button class="btn danger sm" data-action="delete-log" data-id="' + l.id + '">' + ICONS.trash + ' 삭제</button>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>';
+
+    return html;
+  }
+
+  // Filters a chronologically-sorted log list down to a trailing time window.
+  // Delta/PR math elsewhere always uses the full unfiltered history — this only
+  // controls what's shown in the summary card, chart, and session list.
+  function filterLogsByPeriod(logs, period){
+    if(period === 'all' || !period) return logs;
+    var days = {'4w':28, '3m':90, '6m':182}[period];
+    if(!days) return logs;
+    var cutoff = new Date();
+    cutoff.setHours(0,0,0,0);
+    cutoff.setDate(cutoff.getDate() - (days-1));
+    var cutoffStr = cutoff.getFullYear()+'-'+String(cutoff.getMonth()+1).padStart(2,'0')+'-'+String(cutoff.getDate()).padStart(2,'0');
+    return logs.filter(function(l){ return l.date >= cutoffStr; });
+  }
+
+  function renderSparkline(logs){
+    if(logs.length < 2) return '<div class="muted small" style="margin-top:12px;">세션이 2개 이상 쌓이면 추이 그래프가 표시돼요.</div>';
+    var vols = logs.map(function(l){ return calcVolume(l.sets); });
+    var max = Math.max.apply(null, vols), min = Math.min.apply(null, vols);
+    var range = (max - min) || 1;
+    var w = 300, h = 56, pad = 6;
+    var stepX = (w - pad*2) / (vols.length - 1);
+    var pts = vols.map(function(v, i){
+      var x = pad + i*stepX;
+      var y = pad + (1 - (v-min)/range) * (h - pad*2);
+      return x.toFixed(1)+','+y.toFixed(1);
+    });
+    var lastPt = pts[pts.length-1].split(',');
+    var svg = '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+      '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#5B8DBE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="3.2" fill="#E8622C"/>' +
+    '</svg>';
+    return '<div style="margin-top:10px;"><div class="mlabel" style="margin-bottom:2px;">볼륨 추이 (세션별 총 볼륨)</div>' + svg + '</div>';
+  }
+
+  /* ============ Tab: 전체 기록 ============ */
+  function renderAllLogsTab(){
+    var html = '';
+    if(!state.logs.length){
+      html += '<div class="empty"><div class="empty-icon">' + ICONS.list + '</div>아직 기록이 없어요.<br>첫 운동을 <b>기록</b>해보세요!</div>';
+      return html;
+    }
+    var byDate = {};
+    var dates = [];
+    sortLogsChrono(state.logs).reverse().forEach(function(l){
+      if(!byDate[l.date]){ byDate[l.date] = []; dates.push(l.date); }
+      byDate[l.date].push(l);
+    });
+    dates.forEach(function(date){
+      html += '<div class="logday">';
+      html += '<div class="logday-date">' + formatDateLabel(date) + '</div>';
+      byDate[date].forEach(function(l){
+        var ex = getExercise(l.exerciseId);
+        var vol = calcVolume(l.sets);
+        var setsText = l.sets.map(function(s){ return fmtNum(s.weight)+'×'+(s.reps||0); }).join(', ');
+        html += '<div class="logitem">' +
+          '<div class="logitem-head"><span class="logitem-name">' + escapeHtml(ex?ex.name:'(삭제된 운동)') + '</span>' +
+          '<span class="hist-vol">' + fmtNum(vol) + 'kg</span></div>' +
+          '<div class="logitem-sets">' + escapeHtml(setsText) + '</div>' +
+          (l.memo ? '<div class="hist-vol">' + escapeHtml(l.memo) + '</div>' : '') +
+          '<div class="logitem-actions">' +
+            '<button class="btn ghost sm" data-action="edit-log" data-id="' + l.id + '">' + ICONS.edit + ' 수정</button>' +
+            '<button class="btn danger sm" data-action="delete-log" data-id="' + l.id + '">' + ICONS.trash + ' 삭제</button>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    });
+    return html;
+  }
+
+  /* ============ Tab: 설정 ============ */
+  function renderSettingsTab(){
+    var html = '';
+    html += '<div class="section-label">데이터 관리</div>';
+    html += '<div class="card stack">';
+    html += '<div class="warn-box">모든 기록은 이 브라우저(기기)에만 저장돼요. 인터넷으로 동기화되지 않으니, 브라우저 데이터를 지우거나 기기를 바꾸기 전에 <b>내보내기</b>로 꼭 백업해두세요.</div>';
+    html += '<button class="btn block" data-action="export-data">기록 내보내기 (JSON 파일로 저장)</button>';
+    html += '<label class="btn block" for="importFile" style="display:flex;">기록 가져오기 (JSON 파일 불러오기)</label>';
+    html += '<input type="file" id="importFile" accept="application/json" style="display:none;">';
+    html += '</div>';
+
+    html += '<div class="section-label">운동 종목 관리</div>';
+    html += '<div class="card">';
+    html += '<div class="muted small" style="margin-bottom:10px;">현재 ' + state.exercises.length + '개 종목이 등록되어 있어요.</div>';
+    html += '<button class="btn block" data-action="open-exercise-manager">운동 종목 편집</button>';
+    html += '</div>';
+
+    html += '<div class="section-label">위험 구역</div>';
+    html += '<div class="card">';
+    if(ui.confirmClearStep === 0){
+      html += '<button class="btn danger block" data-action="clear-all-step1">전체 기록 삭제</button>';
+    } else {
+      html += '<div class="warn-box" style="margin-bottom:12px;">정말 모든 운동 기록과 종목을 삭제할까요? 이 작업은 되돌릴 수 없어요.</div>' +
+        '<div class="row">' +
+        '<button class="btn ghost" style="flex:1;" data-action="clear-all-cancel">취소</button>' +
+        '<button class="btn danger" style="flex:1;" data-action="clear-all-confirm">삭제 확인</button>' +
+        '</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="section-label">정보</div>';
+    html += '<div class="card muted small">PR노트 · 오프라인 개인 운동 기록 앱<br>총 ' + state.logs.length + '개의 기록이 저장되어 있어요.</div>';
+
+    return html;
+  }
+
+  /* ============ Modals ============ */
+  function renderAddExerciseModal(){
+    var isEdit = !!ui.editingExerciseId;
+    var opts = CATEGORIES.map(function(c){
+      var sel = c === ui.newExCategory ? ' selected' : '';
+      return '<option value="' + c + '"' + sel + '>' + c + '</option>';
+    }).join('');
+    return '<div class="modal-backdrop" data-action="close-modal-backdrop">' +
+      '<div class="modal" data-stop="1">' +
+        '<div class="modal-handle"></div>' +
+        '<div class="modal-title">' + (isEdit ? '운동 종목 수정' : '새 운동 종목 추가') + '</div>' +
+        '<label class="field"><span class="flabel">운동 이름</span>' +
+          '<input type="text" placeholder="예: 케이블 크로스오버" value="' + escapeHtml(ui.newExName) + '" data-field="new-ex-name"></label>' +
+        '<label class="field"><span class="flabel">부위</span><select data-field="new-ex-category">' + opts + '</select></label>' +
+        (isEdit ? '<div class="muted small" style="margin:-6px 0 16px;">이름이나 부위를 바꿔도 이 운동으로 남긴 과거 기록은 그대로 유지되고, 새 이름으로 자동 표시돼요.</div>' : '') +
+        '<div class="row"><button class="btn ghost" style="flex:1;" data-action="close-add-exercise">취소</button>' +
+        '<button class="btn primary" style="flex:1;" data-action="confirm-add-exercise">' + (isEdit ? '저장' : '추가') + '</button></div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderExerciseManagerModal(){
+    var html = '<div class="modal-backdrop" data-action="close-modal-backdrop">' +
+      '<div class="modal" data-stop="1">' +
+        '<div class="modal-handle"></div>' +
+        '<div class="row between" style="margin-bottom:4px; gap:12px;">' +
+          '<div class="modal-title" style="margin-bottom:0; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">운동 종목 편집</div>' +
+          '<button class="btn primary sm" style="flex-shrink:0;" data-action="open-add-exercise-from-manager">' + ICONS.plus + ' 종목추가</button>' +
+        '</div>';
+    CATEGORIES.forEach(function(cat){
+      var exs = state.exercises.filter(function(e){ return e.category === cat; });
+      if(!exs.length) return;
+      html += '<div class="flabel" style="margin-top:12px;">' + cat + '</div>';
+      exs.forEach(function(e){
+        var count = logsForExercise(e.id).length;
+        html += '<div class="row between" style="padding:8px 0; border-bottom:1px solid var(--border); gap:10px;">' +
+          '<span style="font-size:14px; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + escapeHtml(e.name) + (count?' <span class="muted small">('+count+')</span>':'') + '</span>' +
+          '<div class="row" style="gap:6px; flex-shrink:0;">' +
+            '<button class="iconbtn sm" data-action="edit-exercise" data-id="' + e.id + '">' + ICONS.edit + '</button>' +
+            '<button class="iconbtn sm" data-action="delete-exercise" data-id="' + e.id + '">' + ICONS.trash + '</button>' +
+          '</div>' +
+        '</div>';
+      });
+    });
+    html += '<button class="btn ghost block" style="margin-top:16px;" data-action="close-exercise-manager">닫기</button>';
+    html += '</div></div>';
+    return html;
+  }
+
+  /* ============ Actions ============ */
+  function setTab(t){ ui.tab = t; render(); }
+
+  function showComparisonNotify(logObj){
+    ui.lastComparison = buildComparison(logObj);
+    render();
+    clearTimeout(ui.compareTimer);
+    ui.compareTimer = setTimeout(function(){ ui.lastComparison = null; render(); }, 6000);
+  }
+  function dismissComparison(){
+    ui.lastComparison = null;
+    clearTimeout(ui.compareTimer);
+    render();
+  }
+
+  function addSetRow(){ ui.logForm.sets.push({weight:'', reps:''}); render(); }
+  function removeSetRow(idx){
+    if(ui.logForm.sets.length<=1) return;
+    ui.logForm.sets.splice(idx,1); render();
+  }
+
+  function resetLogForm(keepExercise){
+    var exId = keepExercise ? ui.logForm.exerciseId : null;
+    ui.logForm = { date: todayStr(), exerciseId: exId, sets:[{weight:'',reps:''}], memo:'', editingLogId:null };
+  }
+
+  function saveLog(){
+    var f = ui.logForm;
+    if(!f.exerciseId){ showToast('운동 종목을 선택해주세요'); return; }
+    if(!f.date){ showToast('날짜를 선택해주세요'); return; }
+    var cleanSets = f.sets
+      .map(function(s){ return {weight: parseFloat(s.weight)||0, reps: parseInt(s.reps)||0}; })
+      .filter(function(s){ return s.weight>0 || s.reps>0; });
+    if(!cleanSets.length){ showToast('세트를 1개 이상 입력해주세요'); return; }
+
+    var logObj;
+    if(f.editingLogId){
+      logObj = state.logs.find(function(l){ return l.id === f.editingLogId; });
+      if(!logObj){ showToast('수정할 기록을 찾을 수 없어요'); return; }
+      logObj.date = f.date; logObj.exerciseId = f.exerciseId; logObj.sets = cleanSets; logObj.memo = f.memo.trim();
+    } else {
+      logObj = { id: uid('log'), date: f.date, exerciseId: f.exerciseId, sets: cleanSets, memo: f.memo.trim(), createdAt: Date.now() };
+      state.logs.push(logObj);
+    }
+    persist();
+    resetLogForm(false);
+    showComparisonNotify(logObj);
+  }
+
+  function editLog(id){
+    var l = state.logs.find(function(x){ return x.id === id; });
+    if(!l) return;
+    ui.logForm = {
+      date: l.date, exerciseId: l.exerciseId,
+      sets: l.sets.map(function(s){ return {weight:String(s.weight), reps:String(s.reps)}; }),
+      memo: l.memo || '', editingLogId: l.id
+    };
+    ui.lastComparison = null;
+    ui.tab = 'log';
+    render();
+    window.scrollTo(0,0);
+  }
+  function deleteLog(id){
+    if(!confirm('이 기록을 삭제할까요?')) return;
+    state.logs = state.logs.filter(function(l){ return l.id !== id; });
+    persist();
+    render();
+  }
+  function cancelEdit(){ resetLogForm(false); render(); }
+
+  function openAddExercise(fromManager){
+    ui.showAddExercise = true;
+    ui.newExName = ''; ui.newExCategory = '가슴';
+    ui.editingExerciseId = null;
+    ui.addExerciseReturnTo = fromManager ? 'manager' : null;
+    if(fromManager) ui.showExerciseManager = false; // hide the manager sheet so the add form is actually visible
+    render();
+  }
+  function openEditExercise(id){
+    var ex = getExercise(id);
+    if(!ex) return;
+    ui.showAddExercise = true;
+    ui.newExName = ex.name; ui.newExCategory = ex.category;
+    ui.editingExerciseId = id;
+    ui.addExerciseReturnTo = 'manager';
+    ui.showExerciseManager = false;
+    render();
+  }
+  function closeAddExercise(){
+    ui.showAddExercise = false;
+    ui.editingExerciseId = null;
+    if(ui.addExerciseReturnTo === 'manager'){ ui.showExerciseManager = true; }
+    ui.addExerciseReturnTo = null;
+    render();
+  }
+  function confirmAddExercise(){
+    var name = ui.newExName.trim();
+    if(!name){ showToast('운동 이름을 입력해주세요'); return; }
+
+    if(ui.editingExerciseId){
+      var existing = getExercise(ui.editingExerciseId);
+      if(!existing){ showToast('수정할 종목을 찾을 수 없어요'); return; }
+      existing.name = name;
+      existing.category = ui.newExCategory;
+      persist();
+    } else {
+      var newEx = {id: uid('ex'), name: name, category: ui.newExCategory};
+      state.exercises.push(newEx);
+      persist();
+      if(ui.addExerciseReturnTo !== 'manager'){ ui.logForm.exerciseId = newEx.id; }
+    }
+
+    var wasEdit = !!ui.editingExerciseId;
+    ui.showAddExercise = false;
+    ui.editingExerciseId = null;
+    if(ui.addExerciseReturnTo === 'manager'){ ui.showExerciseManager = true; }
+    ui.addExerciseReturnTo = null;
+    render();
+    showToast(wasEdit ? '운동 종목이 수정되었어요' : '운동 종목이 추가되었어요');
+  }
+  function openExerciseManager(){ ui.showExerciseManager = true; render(); }
+  function closeExerciseManager(){ ui.showExerciseManager = false; render(); }
+  function deleteExercise(id){
+    var count = logsForExercise(id).length;
+    var msg = count>0
+      ? '이 운동으로 기록된 ' + count + '개의 기록도 함께 삭제돼요. 계속할까요?'
+      : '이 운동 종목을 삭제할까요?';
+    if(!confirm(msg)) return;
+    state.exercises = state.exercises.filter(function(e){ return e.id !== id; });
+    state.logs = state.logs.filter(function(l){ return l.exerciseId !== id; });
+    persist();
+    render();
+  }
+
+  function exportData(){
+    var payload = { exportedAt: new Date().toISOString(), exercises: state.exercises, logs: state.logs };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var stamp = todayStr();
+    a.href = url; a.download = 'PR노트_백업_' + stamp + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    showToast('백업 파일이 저장되었어요');
+  }
+  function importDataFromFile(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var data = JSON.parse(reader.result);
+        if(!Array.isArray(data.exercises) || !Array.isArray(data.logs)) throw new Error('형식 오류');
+        var mode = confirm('가져온 데이터로 완전히 덮어쓸까요?\n[확인]=덮어쓰기 / [취소]=기존 데이터에 합치기');
+        if(mode){
+          state.exercises = data.exercises;
+          state.logs = data.logs;
+        } else {
+          var exIds = {}; state.exercises.forEach(function(e){ exIds[e.id]=true; });
+          data.exercises.forEach(function(e){ if(!exIds[e.id]) state.exercises.push(e); });
+          var logIds = {}; state.logs.forEach(function(l){ logIds[l.id]=true; });
+          data.logs.forEach(function(l){ if(!logIds[l.id]) state.logs.push(l); });
+        }
+        persist();
+        render();
+        showToast('가져오기 완료');
+      }catch(e){
+        alert('올바른 백업 파일이 아니에요.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function clearAllStep1(){ ui.confirmClearStep = 1; render(); }
+  function clearAllCancel(){ ui.confirmClearStep = 0; render(); }
+  function clearAllConfirm(){
+    state.exercises = DEFAULT_EXERCISES.slice();
+    state.logs = [];
+    persist();
+    ui.confirmClearStep = 0;
+    render();
+    showToast('모든 기록이 삭제되었어요');
+  }
+
+  /* ============ Event binding (delegated) ============ */
+  function bindDynamic(){
+    app.onclick = function(e){
+      var stopEl = e.target.closest('[data-stop]');
+      var backdrop = e.target.closest('[data-action="close-modal-backdrop"]');
+      if(backdrop && !stopEl){
+        if(ui.showAddExercise){ closeAddExercise(); }
+        else if(ui.showExerciseManager){ closeExerciseManager(); }
+        return;
+      }
+      var el = e.target.closest('[data-action]');
+      if(!el) return;
+      var action = el.dataset.action;
+      var id = el.dataset.id;
+      var idx = el.dataset.idx !== undefined ? parseInt(el.dataset.idx) : null;
+      switch(action){
+        case 'nav': setTab(el.dataset.tab); break;
+        case 'add-set': addSetRow(); break;
+        case 'remove-set': removeSetRow(idx); break;
+        case 'save-log': saveLog(); break;
+        case 'cancel-edit': cancelEdit(); break;
+        case 'edit-log': editLog(id); break;
+        case 'delete-log': deleteLog(id); break;
+        case 'dismiss-comparison': dismissComparison(); break;
+        case 'open-history-from-notify':
+          ui.historyExerciseId = id;
+          ui.tab = 'history';
+          clearTimeout(ui.compareTimer);
+          ui.lastComparison = null;
+          render();
+          break;
+        case 'open-add-exercise': openAddExercise(false); break;
+        case 'open-add-exercise-from-manager': openAddExercise(true); break;
+        case 'close-add-exercise': closeAddExercise(); break;
+        case 'confirm-add-exercise': confirmAddExercise(); break;
+        case 'open-exercise-manager': openExerciseManager(); break;
+        case 'close-exercise-manager': closeExerciseManager(); break;
+        case 'delete-exercise': deleteExercise(id); break;
+        case 'edit-exercise': openEditExercise(id); break;
+        case 'pick-history-exercise': ui.historyExerciseId = id; render(); break;
+        case 'pick-history-period': ui.historyPeriod = el.dataset.period; render(); break;
+        case 'export-data': exportData(); break;
+        case 'clear-all-step1': clearAllStep1(); break;
+        case 'clear-all-cancel': clearAllCancel(); break;
+        case 'clear-all-confirm': clearAllConfirm(); break;
+      }
+    };
+
+    app.oninput = function(e){
+      var t = e.target;
+      var field = t.dataset ? t.dataset.field : null;
+      if(!field) return;
+      var idx = t.dataset.idx !== undefined ? parseInt(t.dataset.idx) : null;
+      switch(field){
+        case 'log-date': ui.logForm.date = t.value; break;
+        case 'log-memo': ui.logForm.memo = t.value; break;
+        case 'set-weight': ui.logForm.sets[idx].weight = t.value; break;
+        case 'set-reps': ui.logForm.sets[idx].reps = t.value; break;
+        case 'new-ex-name': ui.newExName = t.value; break;
+      }
+    };
+    app.onchange = function(e){
+      var t = e.target;
+      var field = t.dataset ? t.dataset.field : null;
+      if(field === 'log-exercise'){ ui.logForm.exerciseId = t.value || null; render(); return; }
+      if(field === 'new-ex-category'){ ui.newExCategory = t.value; return; }
+      if(t.id === 'importFile' && t.files && t.files[0]){ importDataFromFile(t.files[0]); t.value=''; }
+    };
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

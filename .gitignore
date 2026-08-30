@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Local backups (실수로 개인 운동 기록 백업 JSON을 커밋하지 않도록)
+*_백업_*.json
+PR노트_백업_*.json
+*.zip
